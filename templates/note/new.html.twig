@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create New Note{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Note</h2>
+            </div>
+            
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+                
+                    <div class="mb-3">
+                        {{ form_label(form.title, 'Title', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.title, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Enter note title',
+                            'required': 'required'
+                        }}) }}
+                        <div class="invalid-feedback">
+                            Please provide a title.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form_label(form.content, 'Content', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.content, {'attr': {
+                            'class': 'form-control',
+                            'rows': 8,
+                            'placeholder': 'Write your note content here...',
+                            'required': 'required'
+                        }}) }}
+                        <div class="invalid-feedback">
+                            Please provide content.
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_note_index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to list
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Note
+                        </button>
+                    </div>
+                
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ note.title }} - Note Details{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .note-detail-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .note-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .note-meta {
+            color: #64748b;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .note-content-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid #4361ee;
+        }
+        
+        .note-content-text {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: #334155;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: #475569;
+            min-width: 120px;
+        }
+        
+        .detail-value {
+            color: #1e293b;
+            flex: 1;
+        }
+        
+        .note-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn-back {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            color: #4361ee;
+            transform: translateX(-3px);
+        }
+        
+        .btn-edit {
+            background-color: #f0f9ff;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-edit:hover {
+            background-color: #e0f2fe;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .note-detail-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .note-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .note-actions {
+                flex-direction: column-reverse;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .btn-group {
+                width: 100%;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="note-detail-container">
+        <div class="note-header">
+            <div>
+                <h1 class="note-title">{{ note.title }}</h1>
+                <div class="note-meta">
+                    <i class="bi bi-calendar"></i>
+                    Created: {{ note.createdAt ? note.createdAt|date('M d, Y \a\t H:i') : '' }}
+                </div>
+            </div>
+        </div>
+
+        <div class="note-content-card">
+            <div class="note-content-text">{{ note.content }}</div>
+        </div>
+
+        <div class="detail-item">
+            <div class="detail-label">Note ID:</div>
+            <div class="detail-value">{{ note.id }}</div>
+        </div>
+
+        <div class="note-actions">
+            <a href="{{ path('app_note_index') }}" class="btn-back">
+                <i class="bi bi-arrow-left"></i> Back to list
+            </a>
+            <div class="btn-group">
+                <a href="{{ path('app_note_edit', {'id': note.id}) }}" class="btn-edit">
+                    <i class="bi bi-pencil"></i> Edit Note
+                </a>
+                {{ include('note/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteForm = document.querySelector('.delete-form');
+            if (deleteForm) {
+                deleteForm.innerHTML = `
+                    <button class="btn-delete">
+                        <i class="bi bi-trash"></i> Delete Note
+                    </button>
+                `;
+                
+                const btn = deleteForm.querySelector('.btn-delete');
+                btn.addEventListener('click', function(e) {
+                    if (!confirm('Are you sure you want to delete this note?')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

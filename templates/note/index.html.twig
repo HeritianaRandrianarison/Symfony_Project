@@ -1,0 +1,287 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Notes | Modern Interface{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --text: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+        }
+        
+        body {
+            background-color:rgb(255, 255, 255);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .notes-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .app-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary), #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .btn-magic {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-magic:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(99, 102, 241, 0.4);
+            color: white;
+        }
+        
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .note-card {
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .note-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+        }
+        
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .note-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+        }
+        
+        .note-content {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .note-date {
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        
+        .view-btn {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
+        
+        .edit-btn {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-radius: 16px;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .empty-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-subtext {
+            color: #64748b;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .app-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="notes-container">
+        <div class="app-header animate__animated animate__fadeIn">
+            <h1 class="app-title">
+                <i class="bi bi-journal-bookmark-fill"></i> My Notes
+            </h1>
+            <a href="{{ path('app_note_new') }}" class="btn-magic animate__animated animate__pulse animate__infinite animate__slower">
+                <i class="bi bi-plus-lg"></i> New Note
+            </a>
+        </div>
+
+        {% if notes|length > 0 %}
+            <div class="notes-grid">
+                {% for note in notes %}
+                    <div class="note-card glass-card animate__animated animate__fadeInUp" style="animation-delay: {{ loop.index0 * 0.1 }}s">
+                        <h3 class="note-title">{{ note.title }}</h3>
+                        <p class="note-content">
+                            {{ note.content|striptags|slice(0, 150) }}{% if note.content|length > 150 %}...{% endif %}
+                        </p>
+                        <div class="note-footer">
+                            <span class="note-date">
+                                <i class="bi bi-calendar3"></i> {{ note.createdAt|date('M d, Y') }}
+                            </span>
+                            <div class="note-actions">
+                                <a href="{{ path('app_note_show', {'id': note.id}) }}" class="action-btn view-btn">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                <a href="{{ path('app_note_edit', {'id': note.id}) }}" class="action-btn edit-btn">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state glass-card animate__animated animate__fadeIn">
+                <div class="empty-icon">
+                    <i class="bi bi-journal-x"></i>
+                </div>
+                <h3 class="empty-text">No Notes Yet</h3>
+                <p class="empty-subtext">
+                    Your notes will appear here when you create them. Get started by adding your first note!
+                </p>
+                <a href="{{ path('app_note_new') }}" class="btn-magic">
+                    <i class="bi bi-plus-lg"></i> Create First Note
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateOnScroll = () => {
+                const cards = document.querySelectorAll('.note-card');
+                cards.forEach(card => {
+                    const cardPosition = card.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+                    
+                    if (cardPosition < screenPosition) {
+                        card.classList.add('animate__fadeInUp');
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll();
+            if (!document.querySelector('link[href*="bootstrap-icons"]')) {
+                console.warn('Bootstrap Icons non détectés - chargement depuis CDN');
+                const iconLink = document.createElement('link');
+                iconLink.rel = 'stylesheet';
+                iconLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css';
+                document.head.appendChild(iconLink);
+            }
+        });
+    </script>
+{% endblock %}

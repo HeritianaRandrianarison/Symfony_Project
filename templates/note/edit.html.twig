@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit "{{ note.title }}"{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h2 class="mb-0"><i class="bi bi-pencil-square"></i> Edit "{{ note.title }}"</h2>
+            </div>
+            
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                
+                    <div class="mb-3">
+                        {{ form_label(form.title, 'Title', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.title, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Enter note title',
+                            'required': 'required'
+                        }}) }}
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form_label(form.content, 'Content', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.content, {'attr': {
+                            'class': 'form-control',
+                            'rows': 8,
+                            'required': 'required'
+                        }}) }}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_note_index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to list
+                        </a>
+                        <div>
+                            <button type="submit" class="btn btn-warning me-2">
+                                <i class="bi bi-save"></i> Update
+                            </button>
+                            {{ include('note/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
